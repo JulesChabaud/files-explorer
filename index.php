@@ -1,65 +1,31 @@
 <?php include 'header.php';
-require('functions.php');
+      include '_functions.php';
 
+$url = getcwd();
+$arrayUrl = scandir($url);
+$firstDirectory = "start";
 
-$url = getcwd(); //string of url to start
-$arrayUrlBase = scandir($url); // array of url to start
-$nameStartDirectory = "start"; //name of the first directory
-
-
-if(isset($_SESSION['currentPath'])) {
+if(!isset($_SESSION['currentPath'])) {
+  if($url == FALSE){
+    echo "Vous n'avez pas accès à l'explorateur";
+  } else {
+      if(in_array($firstDirectory, $arrayUrl)){
+        $pathCurrent = getcwd() . DIRECTORY_SEPARATOR . $firstDirectory;
+      } else {
+        $pathCurrent = getcwd() . DIRECTORY_SEPARATOR . $firstDirectory;
+        mkdir($pathCurrent);
+      }
+  }
+}else{
   $pathCurrent = $_SESSION['currentPath'];
 }
 
-//Le répertoire de départ
-if($url == FALSE){ // if url return false
-  echo "Vous n'avez pas accès au dossier";
-} else { // if url return true
+chdir($pathCurrent);
+$arrayUrl= scandir($pathCurrent);
+$arrayUrl= array_slice($arrayUrl, 2); // Without  et ..
 
-    if(in_array($nameStartDirectory, $arrayUrlBase)){ // if first directory exists in projet architect
-      if(!isset($_POST['directory']) && !isset($_POST['showHideFile'])){ // if no directory select
-        $pathCurrent = getcwd() . DIRECTORY_SEPARATOR . $nameStartDirectory; //path of the first directory
-        chdir($pathCurrent); //go the the first directory
-      } elseif(isset($_POST['showHideFile'])) {
-        chdir($pathCurrent);
-      }
-      else {
-        $directory = $_POST["directory"];
-
-        //go to back
-        $pathArray = explode(DIRECTORY_SEPARATOR, $pathCurrent);
-        if(in_array($directory, $pathArray)){
-          $positionDirectory = array_search($directory,$pathArray);
-          $arrayPathToDirectory = array_slice($pathArray, 0, $positionDirectory + 1);
-          $pathCurrent = implode(DIRECTORY_SEPARATOR, $arrayPathToDirectory);
-        } else {
-          $pathCurrent = $pathCurrent . DIRECTORY_SEPARATOR . $directory;
-        }
-        chdir($pathCurrent);
-      }
-    } else { // if first directory doesn't exists in projet architect
-      $pathCurrent = getcwd() . DIRECTORY_SEPARATOR . $nameStartDirectory; //path of the first directory
-      mkdir($pathCurrent); // create first directory
-      chdir($pathCurrent); //go the the first directory
-    }
-
-    // scanner l'interieur d'un dossier courrant
-    $arrayUrl= scandir($pathCurrent);
-
-    // breadCrumbs
-    $BreadCrumbsArray = explode(DIRECTORY_SEPARATOR, $pathCurrent);
-    $positionStart = array_search('start',$BreadCrumbsArray);
-    $BreadCrumbsFromStart = array_slice($BreadCrumbsArray, $positionStart + 1);
-
-
-    // Without  et ..
-    $arrayUrlWithoutParent = array_slice($arrayUrl, 2);
-    $_SESSION['currentPath'] = $pathCurrent;
-
-
-}
+$_SESSION['currentPath'] = $pathCurrent;
 ?>
-
 
   <div class="container-explorer">
     <div class="close">
@@ -67,132 +33,90 @@ if($url == FALSE){ // if url return false
         <img src="assets/images/close.png">
       </div>
     </div>
-    <form class="function" method="POST" action="index.php">
+    <form method="POST" action="logic.php">
+      <div class="function">
 
-      <div class="function_firstparts">
-        <p>Couper</p>
-        <p>Copier</p>
-        <p>Coller</p>
-        <p>Supprimer</p>
-      </div>
-      <div class="">
-        <div class="toggle toggle--daynight">
-            <p>Elements masqués</p>
-            <input type="checkbox" id="toggle--daynight" class="toggle--checkbox" name="showHideFile" value="showHideFile" <?php if(isset($_POST['showHideFile'])){?> checked <?php }?>>
-            <label class="toggle--btn" for="toggle--daynight"><span class="toggle--feature"></span></label>
+        <div class="function_firstparts">
+          <label for="createFile">Nouveau</label>
+          <input type="text" name="create" id="create">
+
         </div>
-        <input class="function-applicate" type="submit" value="appliquer">
+        <div class="">
+          <div class="toggle toggle--daynight">
+              <p>Elements masqués</p>
+              <input type="hidden" id="toggle--daynight2" class="toggle--checkbox" name="showHideFile[]" value="hideFile">
+              <input type="checkbox" id="toggle--daynight" class="toggle--checkbox" name="showHideFile[]" value="showFile"
+                    <?php
+                    if(isset($_SESSION['checked']) && $_SESSION['checked'] == "checked"){ ?>
+                      checked
+                    <?php } ?>>
+
+              <label class="toggle--btn" for="toggle--daynight"><span class="toggle--feature"></span></label>
+          </div>
+          <input class="function-applicate" type="submit" value="appliquer">
+        </div>
       </div>
 
-
-
-    </form>
-
-    <form class="" action="index.php" method="post">
       <nav>
-
         <div class="breadCrumbs">
           <ul>
-            <img src="assets/images/directory_mini.png" class="img_directoryMini">
-
-              <?php
-              if(empty($BreadCrumbsFromStart)){
-                echo "<li></li>";
-              } else {
-                foreach ($BreadCrumbsFromStart as $value) {
-                  echo "<li><button type='submit' name='directory' value='$value'>$value</button></li>";
-                }
-              }
-              ?>
-
+            <button type='submit' name='directory' value='start'><img src="assets/images/directory_mini.png" class="img_directoryMini"></button>
+              <?php breadCrumbs($pathCurrent, $firstDirectory) ?>
           </ul>
         </div>
 
         <div class="nav-aside">
-          <ul>
+          <?php
+
+          $dir = isset($_POST['dir']) ? $_POST['dir'] : '';
+
+          if(isset($_SESSION['navAsidePoint'])){
+            $navAsidePoint  = $_SESSION['navAsidePoint'];
+          } else {
+            $navAsidePoint  = '..' . DIRECTORY_SEPARATOR;
+            $_SESSION['navAsidePoint'] = $navAsidePoint;
+          }
+
+          $BASE = $navAsidePoint .  $firstDirectory;
+          if(!$dir) {
+            echo "<img src='assets/images/directory_mini.png' width='20px'/> / <br />";
+          } else {
+            echo "<img src='assets/images/directory_mini.png' width='20px'/> / <br/>";
+          }
+
+          list_dir($BASE, $dir, 1);
+
+          if(!$dir) {
+            $dir = $BASE;
+          }
+
+          ?>
+
+
+
+          <!--
+          <button type='submit' name='directory' value='start'><img src="assets/images/directory_mini.png" class="img_directoryMini"></button>
             <?php/*
-            $point = '..' . DIRECTORY_SEPARATOR;
-            $_SESSION['point'] = mkmap($point . $nameStartDirectory);
-            if(isset($_SESSION['point'])){
-              echo $_SESSION['point'];
-            }*/
-            /*if(!isset($_POST['directory']) && !isset($_POST['showHideFile'])){
-                $point = '..' . DIRECTORY_SEPARATOR;
-                mkmap($point . $nameStartDirectory);
-            } else if(isset($_POST['directory'])) {
-              if(in_array($directory, $pathArray)){
-                if(isset($_SESSION['point'])){
-                  $point = $_SESSION['point'];
-                } else {
-                  $point = '..' . DIRECTORY_SEPARATOR;
-                }
-                for($i = 0; $i < $positionDirectory; $i++){
-                  $point = substr($point,0,-2).  DIRECTORY_SEPARATOR;
-                  echo $point;
-                }
-                $_SESSION['point'] = $point;
-                mkmap($point . $nameStartDirectory);
-              } else {
-                if(isset($_SESSION['point'])){
-                  $point = $_SESSION['point'];
-                } else {
-                  $point = '..' . DIRECTORY_SEPARATOR;
-                }
-                for($i = 0; $i < 1; $i++){
-                  $point = $point . '..' . DIRECTORY_SEPARATOR;
-                }
-                mkmap($point . $nameStartDirectory);
+              if(isset($_SESSION['navAsidePoint'])){
+                $navAsidePoint  = $_SESSION['navAsidePoint'];
+              } else{
+                $navAsidePoint  = '..' . DIRECTORY_SEPARATOR;
+                $_SESSION['navAsidePoint'] = $navAsidePoint;
               }
-            }
-            $_SESSION['point'] = $point;*/
 
-
-
-/*
-            if(!empty($allDirectories)){
-              foreach ($allDirectories as $value) {
-                if(isset($_POST['showHideFile'])){
-                  echo "<li><button type='submit' name='directory' value='$value'><img src='assets/images/directory_mini.png' class='img_directoryMini'>$value</button></li>";
-                } else {
-                  if ($value == strstr($value, '.')) {
-                    echo "";
-                  } else {
-                    echo "<li><button type='submit' name='directory' value='$value'><img src='assets/images/directory_mini.png' class='img_directoryMini'>$value</button></li>";
-                  }
-                }
-            }
-          }*/
-            ?>
-          </ul>
+              architectExplorer($navAsidePoint .  $firstDirectory);*/
+            ?>-->
         </div>
       </nav>
 
       <div class="container-dir">
-
         <div class="row">
-          <?php if(isset($arrayUrlWithoutParent)){
-            foreach ($arrayUrlWithoutParent as $value) {
-              if(isset($_POST['showHideFile'])){
-                echo "<div class='logo-dir2'>
-                        <button type='submit' name='directory' value='$value'><img src='assets/images/directory.png' alt=''></button>
-                        <p>$value</p>
-                      </div>";
-              } else {
-                  if ($value == strstr($value, '.')) {
-                    echo "";
-                  } else {
-                    echo "<div class='logo-dir2'>
-                            <button type='submit' name='directory' value='$value'><img src='assets/images/directory.png' alt=''></button>
-                            <p>$value</p>
-                          </div>";
-                  }
-
-              }
-            }
-          } ?>
-
+          <?php include '_showDirectory.php';?>
         </div>
       </div>
     </div>
   </form>
+
+
+
 <?php include 'footer.php' ?>
