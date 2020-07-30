@@ -140,7 +140,7 @@ if($url == FALSE){ // if url return false
                 }
                 for($i = 0; $i < 1; $i++){
                   $point = $point . '..' . DIRECTORY_SEPARATOR;
-                }
+                } 
                 mkmap($point . $nameStartDirectory);
               }
             }
