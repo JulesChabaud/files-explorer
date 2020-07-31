@@ -42,20 +42,14 @@ function create($pathCurrent, $fileName){
   }
 }
 
-function elementFunction($value){
-  echo "<form method='POST' action='logic.php'>
-          <input type='text' name='rename[]'>
-          <input type='hidden' name='rename[]' value='$value'>
-          <input type='submit' name='rename[]' value='Renommer'>
-        </form>
-       </div>";
-}
+
 function addScheme($entry) {
   $tab['name'] = $entry;
   return $tab;
 }
 
 function list_dir($base, $cur, $level=0) {
+  echo "<ul>";
   global $BASE;
   if ($dir = opendir($base)) {
     $tab = [];
@@ -73,11 +67,11 @@ function list_dir($base, $cur, $level=0) {
       }
 
       if($file == $cur) {
-        echo "<img src='assets/images/directory_mini.png' width='20px'/> $entry<br/>";
+        echo "<img src='assets/images/refont/directory-mini.png' width='30px'/> $entry<br/>";
       } else {
         echo"<form method='POST' action='index.php'>
-              <li><img src='assets/images/directory_mini.png' width='20px'/>
-              <button type='submit' name='dir' value='$file'>$entry</button></li>
+              <li><img src='assets/images/refont/directory-mini.png' width='30px'/>
+              <button id='button-navAside' type='submit' name='dir' value='$file'>$entry</button></li>
             </form>";
       }
 
@@ -87,6 +81,7 @@ function list_dir($base, $cur, $level=0) {
     }
     closedir($dir);
   }
+  echo "<ul>";
 }
 
 

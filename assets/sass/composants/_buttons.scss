@@ -22,8 +22,6 @@ $toggleBtn-borderColor--day: #4c241d;
 
 //All
 .toggle {
-    display: flex;
-    flex-direction: column-reverse;
     text-align: center;
     margin-top: 4vh;
     user-select: none;
@@ -122,4 +120,136 @@ $toggleBtn-borderColor--day: #4c241d;
 
         }
     }
+}
+
+/*---------------------------*/
+
+
+
+
+.function-applicate{
+  background-color: transparent;
+  color: white;
+  -webkit-border-radius: 5px;
+  border: 1px solid white;
+}
+
+.toggle{
+  margin-left: -6vw;
+}
+
+.toggle p{
+  color: white;
+  font-size: 1.2vw;
+  margin-left: 7vw;
+}
+
+/*----*/
+
+.name-directoryStart{
+  display: flex;
+  align-items: center;
+  color: white;
+  font-size: 1.2vw;
+  font-weight: bold;
+}
+
+.name-directoryStart span{
+  margin-left: 0.5vw;
+  line-height: 100%
+}
+
+.container2{
+  width: 6.5vw;
+  height: 3.5vh;
+  border-radius: 10px;
+  margin-left: 6vw;
+  margin-top: -3vh;
+  overflow: hidden;
+}
+
+/*  Where the animation takes place  */
+.container2 .container-inner2{
+  background: #EF4D4D;
+  padding: 1em;
+  border-radius: 10px;
+  width: 7vw;
+  height: 45vh;
+  clip-path: circle(3% at 9% 3.5%);
+  transition: all .5s ease-in-out;
+}
+
+.container-inner2 input{
+  position: absolute;
+  margin-top: -1vh;
+  margin-left: 1vw;
+}
+
+.container2:hover .container-inner2{
+  clip-path: circle(75%);
+  background: #EF4D4D;
+}
+
+.container-rename{
+  position: absolute;
+  width: 20vw;
+  height: 25vh;
+  border-radius: 10px;
+  margin-left: 2.2vw;
+  margin-top: -1.5vh;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.container-rename .container-innerRename{
+  background: #EF4D4D;
+  padding: 1em;
+  border-radius: 10px;
+  width: 7vw;
+  height: 15vh;
+  clip-path: circle(5% at 9% 6%);
+  transition: all .5s ease-in-out;
+}
+
+.container-innerRename form{
+  margin-top: -1vh;
+  margin-left: 1vw;
+}
+
+.container-innerRename:hover{
+  clip-path: circle(75%);
+  background: #EF4D4D;
+  z-index: 999;
+}
+
+.container-innerRename:hover .container-innerRename span{
+  opacity: 0;
+}
+
+#button-navAside{
+  border: none;
+  background-color: transparent;
+  font-size: 1vw;
+  color: white;
+  line-height: 180%;
+
+}
+
+li{
+  list-style: none;
+}
+
+.logo-dir2 button{
+  background-color: transparent;
+  border: none;
+}
+
+.container-innerRename span{
+  position: absolute;
+  color: white;
+  font-size: 1.2vw;
+  margin-left: -3.85vw;
+  margin-top: -1.9vh;
+  opacity: 1;
+  transition: 0.5s ease-in-out;
 }

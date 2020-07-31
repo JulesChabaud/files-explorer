@@ -1,22 +1,21 @@
 .container-dir{
-  margin-left: 12vw;
+  margin-left: 2vw;
   text-align: center;
-  border-left: 2px solid grey;
-  padding-left: 3vw;
-  padding-top: 4vh;
+  margin-left: 1vw;
+  margin-top: 4vh;
   height: 60vh;
   img {
     width: 4vw;
     height: auto;
   }
   p{
-    margin-top: 2vh;
-    margin-bottom: 6vh;
+
   }
 }
 
 .logo-dir2{
   margin-left: 2vw;
+  width: 6vw;
 }
 
 .container-explorer{
@@ -74,4 +73,22 @@
   p {
     margin-left: 2vw;
   }
+}
+
+input[type=text] {
+  border: 2px solid red;
+  border-radius: 4px;
+  width: 100%;
+}
+
+/*----------------------------*/
+
+.wrapper-windowExplo2{
+  margin-top: 15vh;
+  margin-left: 4vw;
+  width: 65vw;
+  height: 70vh;
+  background-color: white;
+  border-radius: 10px 15px 15px 10px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 }
